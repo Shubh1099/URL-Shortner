@@ -5,14 +5,14 @@ async function handleNewShortURL(req, res) {
   const body = req.body;
   if (!body.url) return res.status(400).json({ error: "url is required!" });
   const shortID = shortid();
-
+ 
   await URL.create({
     shortId: shortID,
     redirectURL: body.url,
     visitHistory: [],
   });
 
-  return res.json({ shortID });
+  return res.render("home",{id:shortID});
 }
 
 async function handleDelete(req, res) {
@@ -26,7 +26,6 @@ async function handleDelete(req, res) {
 async function handleAnalytics(req, res) {
   const shortId = req.params.shortId;
 
-  console.log("ShortId is:", shortId);
   const result = await URL.findOne({ shortId });
 
   return res.json({

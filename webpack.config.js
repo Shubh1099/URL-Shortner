@@ -9,4 +9,5 @@ module.exports = {
     filename: "final.js",
   },
   target: "node",
+  historyApiFallback: true,
 };
