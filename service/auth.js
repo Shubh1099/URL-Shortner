@@ -1,37 +1,32 @@
-// const sessionIdToUserMap = new Map();
+const jwt = require("jsonwebtoken");
+const secretKey = "Shubh@000867345$$";
 
-// function setUser(id, user) {
-//   sessionIdToUserMap.set(id, user);
-// }
-
-// function getUser(id, user) {
-//   return sessionIdToUserMap.set(id);
-// }
-
-const sessionIdToUserMap = new Map();
-
-function setUser(id, user) {
-  sessionIdToUserMap.set(id, user);
+function setUser( user) {
+  return jwt.sign({_id:user._id,email:user.email}, secretKey);
 }
 
-function getUser(id) {
-  // Changed from set() to get()
-  return sessionIdToUserMap.get(id);
-}
+function getUser(token) {
+  try {
+    if (!token) return null;
 
-// Optional: Add some utility functions
-function removeUser(id) {
-  return sessionIdToUserMap.delete(id);
-}
+    // Verify and decode the token
+    return jwt.verify(token, secretKey);
+  } catch (error) {
 
-function getAllActiveUsers() {
-  return [...sessionIdToUserMap.values()];
+    if (error.name === "JsonWebTokenError") {
+      console.error("Invalid token:", error.message);
+      return null;
+    }
+    if (error.name === "TokenExpiredError") {
+      console.error("Token expired");
+      return null;
+    }
+    console.error("Error verifying token:", error);
+    return null;
+  }
 }
 
 module.exports = {
   setUser,
   getUser,
-  removeUser,
-  getAllActiveUsers
 };
-
