@@ -24,7 +24,6 @@ async function LoggedInUsersOnly(req, res, next) {
   }
 }
 
-
 async function checkAuth(req, res, next) {
   const userUid = req.cookies?.uid;
 
@@ -37,5 +36,6 @@ async function checkAuth(req, res, next) {
 }
 
 module.exports = {
-  LoggedInUsersOnly,checkAuth
+  LoggedInUsersOnly,
+  checkAuth,
 };

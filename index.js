@@ -1,19 +1,24 @@
+require("dotenv").config();
+console.log("Environment Variables:", process.env);
+
 const express = require("express");
 const app = express();
-const PORT = 3000;
 const URL = require("./models/url.js");
 const { connectToDB } = require("./connection.js");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const { LoggedInUsersOnly,checkAuth } = require("./middlewares/auth");
+const { LoggedInUsersOnly, checkAuth } = require("./middlewares/auth");
 
 const staticRouter = require("./routes/staticRouter.js");
 const urlRoute = require("./routes/url");
 const userRoute = require("./routes/user.js");
 
-connectToDB("mongodb://localhost:27017/short-url").then(() =>
-  console.log("MongoDB connected!")
-);
+const PORT = process.env.PORT;
+const DB_URL = process.env.DB_URL;
+
+console.log(DB_URL);
+
+connectToDB(DB_URL).then(() => console.log("MongoDB connected!"));
 
 app.set("view engine", "ejs");
 app.set("views", path.resolve("./views"));
@@ -36,7 +41,7 @@ app.get("/url/test", async (req, res) => {
 });
 
 app.use("/url", LoggedInUsersOnly, urlRoute);
-app.use("/",checkAuth, staticRouter);
+app.use("/", checkAuth, staticRouter);
 app.use("/user", userRoute);
 
 app.get("/url/:shortId", async (req, res) => {
